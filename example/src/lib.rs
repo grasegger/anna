@@ -4,28 +4,35 @@ extern crate horrorshow;
 use anna::component::Component;
 use anna::event_mapping::EventMapping;
 use async_trait::async_trait;
-use horrorshow::prelude::*;
 use wasm_bindgen::prelude::*;
+use web_sys::Event;
 
 struct App {}
 
+impl App {
+    pub async fn remove_anna(event: Event) {
+
+    }
+}
+
 #[async_trait]
 impl Component for App {
-    async fn get_event_mapping(&self) -> Result<Vec<EventMapping>, String> {
+    async fn get_event_mapping(&self) -> Result<Vec<EventMapping<'_>>, String> {
+        let remove_anna = EventMapping::new(
+            "remove-anna".into(),
+             "click".into(), 
+             &Self::remove_anna
+            );
         Ok(Vec::new())
     }
 
     async fn render(&self) -> Result<String, String> {
         let content = html! {
-            h1(id="heading") {
-                : "Hello! This is <html />"
+            h1 {
+                : "Hello, Anna"
             }
-            ol(id="count") {
-                @ for i in 0..10 {
-                    li(first? = (i == 0)) {
-                        : format_args!("{}", i+1)
-                    }
-                }
+            button(id="remove-anna"){
+                : "remove"
             }
         };
         Ok(format!("{}", content))
